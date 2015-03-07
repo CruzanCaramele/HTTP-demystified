@@ -87,8 +87,24 @@ class webServerHandler(BaseHTTPRequestHandler):
 					output += "</body></html>"
 
 					self.wfile.write(output)
-					
 
+			if self.path.endswith("/delete"):
+				restaurantPathID = self.path.split("/") [2]
+				Query = session.query(Restaurant).filter_by(id=restaurantPathID).one()
+
+				if Query != []:
+					self.send_response(200)
+					self.send_header("Content-type", "text/html")
+					self.end_headers()
+
+					output = ""
+					output += "<html><body>"
+					output += "<h3>Are you sure you want to Delete %s ?</h3>" % Query.name
+					output += "<form method='post' enctype='multipart/form-data' action='/restaurants/%s/delete' >" % restaurantPathID
+					output += "<input type='submit' value='Delete'>"
+					output += "</form>"
+					output += "</body></html>"
+					self.wfile.write(output)
 
 
 
@@ -147,6 +163,23 @@ class webServerHandler(BaseHTTPRequestHandler):
 						self.send_header("Content-type", "text/html")
 						self.send_header("Location", "/restaurants")
 						self.end_headers()
+
+			if self.path.endswith("/delete"):
+				restaurantPathID = self.path.split("/")  [2]
+				Query = session.query(Restaurant).filter_by(id = restaurantPathID).one()
+
+				if Query != []:
+					session.delete(Query)
+					session.commit()
+
+					self.send_response(301)
+					self.send_header("Content-type", "text/html")
+					self.send_header("Location", "/restaurants")
+					self.end_headers()
+
+
+
+
 					
 
 
