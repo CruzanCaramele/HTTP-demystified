@@ -26,28 +26,17 @@ class webServerHandler(BaseHTTPRequestHandler):
 				self.send_header("Content-type", "text/html")
 				self.end_headers()
 
-				#content to send back to the client
+				#Read and list out restaurants from database
+				restaurants = session.query(Restaurant).all()
+
 				output = ""
-				output += "<html><body>Hello !"
-				output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
-		 		output += "</body></html>"
-				self.wfile.write(output)
-				print output
-				return
+				output += "<html><body>"
+				output += "<h1>Restaurants</h1>"
 
-			if self.path.endswith("/hola"):
-				#sending the response headers
-				self.send_response(200)
+				for restaurant in restaurants:
+					output += restaurant.name
+					output += "</br></br>"
 
-				#reply with content type as text html
-				self.send_header("Content-type", "text/html")
-				self.end_headers()
-
-				#content to send back to the client
-				output = ""
-				output += "<html><body>&#161Hola"
-				output += "<a href='/hello' >Back to Hello</a>"
-				output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
 				output += "</body></html>"
 				self.wfile.write(output)
 				print output
@@ -58,41 +47,7 @@ class webServerHandler(BaseHTTPRequestHandler):
 
 
 	def do_POST(self):
-		try:
-
-		 	self.send_response(301)
-		 	self.end_headers()
-
-		 	#cgi.parse_header function parses html form header like content-typ
-		 	#into a main value and dictionary of parameters
-		 	ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
-
-		 	#check if content-type is form data being recieved
-		 	if ctype == "multipart/form-data":
-		 		#collect all fields in the form into fields dictionary
-		 		fields = cgi.parse_multipart(self.rfile, pdict)
-
-		 		#collect the value of specific filed from the form
-		 		messagecontent = fields.get("message")
-
-		 	output = ""
-		 	output += "<html><body>"
-		 	output += "<h2>Okay, How about this: </h2>"
-		 	output += "<h1> %s </h1>" % messagecontent[0]
-
-		 	output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
-
-		 	output += "</body></html>"
-
-		 	self.wfile.write(output)
-		 	print output
-		 	return
-
-
-
-
-		except:
-		 	pass
+		pass
 
 
 
