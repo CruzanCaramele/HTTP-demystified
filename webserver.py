@@ -1,3 +1,4 @@
+import cgi
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 class webServerHandler(BaseHTTPRequestHandler):
@@ -16,7 +17,9 @@ class webServerHandler(BaseHTTPRequestHandler):
 
 				#content to send back to the client
 				output = ""
-				output += "<html><body>Hello ! </body></html>"
+				output += "<html><body>Hello !"
+				output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
+		 		output += "</body></html>"
 				self.wfile.write(output)
 				print output
 				return
@@ -33,17 +36,56 @@ class webServerHandler(BaseHTTPRequestHandler):
 				output = ""
 				output += "<html><body>&#161Hola"
 				output += "<a href='/hello' >Back to Hello</a>"
+				output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
 				output += "</body></html>"
 				self.wfile.write(output)
 				print output
 				return
 
-
-
-
-
 		except IOError:
 			self.send_error(404, "File Not Found %s" % self.path)
+
+
+	def do_POST(self):
+		try:
+
+		 	self.send_response(301)
+		 	self.end_headers()
+
+		 	#cgi.parse_header function parses html form header like content-typ
+		 	#into a main value and dictionary of parameters
+		 	ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
+
+		 	#check if content-type is form data being recieved
+		 	if ctype == "multipart/form-data":
+		 		#collect all fields in the form into fields dictionary
+		 		fields = cgi.parse_multipart(self.rfile, pdict)
+
+		 		#collect the value of specific filed from the form
+		 		messagecontent = fields.get("message")
+
+		 	output = ""
+		 	output += "<html><body>"
+		 	output += "<h2>Okay, How about this: </h2>"
+		 	output += "<h1> %s </h1>" % messagecontent[0]
+
+		 	output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
+
+		 	output += "</body></html>"
+
+		 	self.wfile.write(output)
+		 	print output
+		 	return
+
+
+
+
+		except:
+		 	pass
+
+
+
+
 
 
 def main():
