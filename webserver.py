@@ -39,9 +39,9 @@ class webServerHandler(BaseHTTPRequestHandler):
 				for restaurant in restaurants:
 					output += restaurant.name
 					output += "<div>\
-						       <a href='#'>Edit</a>\
-						       <a href='#'>Delete</a>\
-						    </div>"
+						       <a href='/restaurants/%s/edit'>Edit</a>\
+						       <a href='/restaurants/%s/delete'>Delete</a>\
+						    </div>"  % (restaurant.id , restaurant.id)
 					output += "</br></br>"
 
 				output += "</body></html>"
@@ -67,6 +67,29 @@ class webServerHandler(BaseHTTPRequestHandler):
 				self.wfile.write(output)
 				print output
 				return
+
+
+			if self.path.endswith("/edit"):
+				restaurantPathID = self.path.split("/") [2]
+				Query = session.query(Restaurant).filter_by(id = restaurantPathID).one()
+
+				if Query != []:
+					self.send_response(200)
+					self.send_header("Content-type", "text/html")
+					self.end_headers()
+					output = ""
+					output += "<html><body>"
+					output += "<h1>Change Restaurant Name</h1>"
+					output += "<form method='post' enctype='multipart/form-data' action='/restaurants/%s/edit' >" % restaurantPathID
+					output += "<input name='changedName' type='text' placeholder = '%s' >" % Query.name
+					output += "<input type='submit' value='Change'>"
+					output += "</form>"
+					output += "</body></html>"
+
+					self.wfile.write(output)
+					
+
+
 
 
 
@@ -99,6 +122,32 @@ class webServerHandler(BaseHTTPRequestHandler):
 					self.send_header("Content-type", "text/html")
 					self.send_header('Location','/restaurants')
 					self.end_headers()
+
+
+			if self.path.endswith("/edit"):
+
+				ctype, pdict = cgi.parse_header(self.headers.getheader("content-type"))
+
+				if ctype == "multipart/form-data":
+					fields = cgi.parse_multipart(self.rfile, pdict)
+
+					messagecontent = fields.get("changedName")
+
+					#find id of restaurant
+					restaurantPathID = self.path.split("/") [2]
+
+					Query = session.query(Restaurant).filter_by(id=restaurantPathID).one()
+
+					if Query != []:
+						Query.name = messagecontent[0]
+						session.add(Query)
+						session.commit()
+
+						self.send_response(301)
+						self.send_header("Content-type", "text/html")
+						self.send_header("Location", "/restaurants")
+						self.end_headers()
+					
 
 
 
