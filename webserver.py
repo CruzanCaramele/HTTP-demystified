@@ -21,6 +21,24 @@ class webServerHandler(BaseHTTPRequestHandler):
 				print output
 				return
 
+			if self.path.endswith("/hola"):
+				#sending the response headers
+				self.send_response(200)
+
+				#reply with content type as text html
+				self.send_header("Content-type", "text/html")
+				self.end_headers()
+
+				#content to send back to the client
+				output = ""
+				output += "<html><body>&#161Hola"
+				output += "<a href='/hello' >Back to Hello</a>"
+				output += "</body></html>"
+				self.wfile.write(output)
+				print output
+				return
+
+
 
 
 
