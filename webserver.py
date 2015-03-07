@@ -1,13 +1,24 @@
 import cgi
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
+#import module for ORM
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from database_setup import Restaurant, MenuItem, Base
+
+#create and connect to database
+engine = create_engine("sqlite:///restaurantmenu.db")
+Base.metadata.bind=engine
+DBSession = sessionmaker(bind=engine)
+session=DBSession()
+
 class webServerHandler(BaseHTTPRequestHandler):
 	""" class defined in the main method """
 
 	def do_GET(self): 
 
 		try:
-			if self.path.endswith("/hello"):
+			if self.path.endswith("/restaurants"):
 				#sending the response headers
 				self.send_response(200)
 
