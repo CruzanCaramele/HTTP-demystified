@@ -8,12 +8,7 @@ The goal of this project is to use Python code to explain how the webserver uses
 
 ##Contents
 * [Clients,Servers and Protocols](docs/Clients_Servers_Protocols.md)
-*
-*
-*
-*
-*
-*
+
 
 
 *Before running the webserver, get all requirements listed in [this](https://github.com/CruzanCaramele/MenuDatabase/blob/master/README.md) repository
