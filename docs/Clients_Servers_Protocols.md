@@ -27,3 +27,11 @@ TCP enables information to be broken down into small packes and sent accross the
 
 IP addresses, like postal addresses allow messages to be properly routed to all participants on the internet.
 IP address are looked up in DNS servers (think of DNS like a phone book.)
+
+
+- Hyper Text Transfer Protocol (HTTP)
+
+![HTTP](static/http.png)
+
+Clients tell servers what they want using an HTTP verb. The most commonly used HTTP verbs for websites are GET and POST.
+A Client can send a GET or POST request to the server and the server replies back with HTTP response codes.
