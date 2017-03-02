@@ -9,6 +9,7 @@ specified.
 
 ###### Code Snippet to create and run the server
 
+```
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 def main():
 	try:
@@ -29,6 +30,6 @@ def main():
 if __name__ == '__main__':
 	""" run main method when the python interpreter runs the script """
 	main()
-
+```
 
 The above will create a simple web server on port 8080.
